@@ -68,15 +68,9 @@ const Drawer = styled(MuiDrawer, {
 
 
 export default function Header() {
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = React.useState(true);
     const toggleDrawer = () => {
         setOpen(!open);
-    };
-
-    const [opens, setOpens] = React.useState(true);
-
-    const handleClick = () => {
-        setOpens(!open);
     };
 
 
@@ -185,7 +179,7 @@ export default function Header() {
                 </Toolbar>
                 <Divider />
                 <List component="nav">
-                    {mainListItems({ opens, handleClick })}
+                    {mainListItems}
                     <Divider sx={{ my: 1 }} />
                     {secondaryListItems}
                 </List>

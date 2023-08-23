@@ -5,10 +5,10 @@ import { DataGrid } from '@mui/x-data-grid';
 import axios from 'axios';
 import { Button, IconButton } from '@mui/material';
 import { Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
-import FormDivision from './FormDivision';
+import FormDivision from './FormCategories';
 import Titled from '../Header/Title';
 import Swal from 'sweetalert2';
-export default function DivisionTable(props) {
+export default function CategoriesTable(props) {
 
     const { api } = props;
     const [rows, setRows] = useState([]);
@@ -16,7 +16,7 @@ export default function DivisionTable(props) {
     const [editId, setEditId] = useState(null);
     const [editData, setEditData] = useState(null);
 
-    const [dV_name, setDV_Name] = useState('');
+    const [name, setName] = useState('');
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -25,9 +25,9 @@ export default function DivisionTable(props) {
         setOpen(false);
     };
 
-    const fetchDivisionData = useCallback(async () => {
+    const fetchData = useCallback(async () => {
         try {
-            const response = await axios.get(`${api}DivisionAPI`);
+            const response = await axios.get(`${api}CategoriesAPI`);
             const result = response.data.result;
 
             if (result) {
@@ -50,7 +50,7 @@ export default function DivisionTable(props) {
         try {
             if (!editId) {
                 // ส่งข้อมูลไปยัง API เพื่อบันทึก
-                const response = await axios.post(api + 'DivisionApi', { 'dV_name': dV_name });
+                const response = await axios.post(api + 'CategoriesAPI', { 'name': name });
 
                 handleClose(); // ปิด Dialog
 
@@ -62,10 +62,10 @@ export default function DivisionTable(props) {
                     timer: 1500
                 });
 
-                fetchDivisionData();
+                fetchData();
             } else {
                 // ส่งข้อมูลไปยัง API เพื่อแก้ไข
-                const response = await axios.put(api + 'DivisionApi/' + editId, { 'dV_name': dV_name });
+                const response = await axios.put(api + 'CategoriesAPI/' + editId, { 'name': name });
 
                 handleClose(); // ปิด Dialog
 
@@ -78,7 +78,7 @@ export default function DivisionTable(props) {
                 });
 
                 // อัปเดตข้อมูลใน DataGrid
-                fetchDivisionData();
+                fetchData();
             }
         } catch (error) {
             console.error('Error saving data:', error);
@@ -94,10 +94,10 @@ export default function DivisionTable(props) {
     }
 
     const handleEdit = ((id) => {
-        const division = (rows.find(row => row.id === id));
-        setEditData(division);
+        const data = (rows.find(row => row.id === id));
+        setEditData(data);
         // console.log(division.dV_Name);
-        setDV_Name(division?.dV_Name)
+        setName(data?.name)
         setEditId(id)
     })
 
@@ -115,7 +115,7 @@ export default function DivisionTable(props) {
             });
 
             if (result.isConfirmed) {
-                const response = await axios.delete(api + 'DivisionApi/' + id);
+                const response = await axios.delete(api + 'CategoriesAPI/' + id);
 
                 Swal.fire({
                     position: 'center',
@@ -125,7 +125,7 @@ export default function DivisionTable(props) {
                     timer: 1500
                 });
 
-                fetchDivisionData();
+                fetchData();
             }
         } catch (error) {
             console.error('Error deleting data:', error);
@@ -134,8 +134,8 @@ export default function DivisionTable(props) {
 
     const columns = [
         { field: 'AutoId', headerName: 'ID', width: 70 },
-        { field: 'dV_ID', headerName: 'รหัสแผนก', width: 130 },
-        { field: 'dV_Name', headerName: 'ชื่อแผนก', width: 250 },
+        { field: 'c_ID', headerName: 'รหัสปัญหา', width: 130 },
+        { field: 'name', headerName: 'รายการปัญหาที่พบ', width: 200 },
         {
             field: 'actions',
             headerName: 'การจัดการ',
@@ -155,8 +155,8 @@ export default function DivisionTable(props) {
     ];
 
     useEffect(() => {
-        fetchDivisionData();
-    }, [fetchDivisionData]);
+        fetchData();
+    }, [fetchData]);
 
     return (
         <>
@@ -166,7 +166,7 @@ export default function DivisionTable(props) {
                 </Button>
             </div>
             <div>
-                <Titled>รายการข้อมูลแผนก</Titled>
+                <Titled>รายการข้อมูลอาการเสีย</Titled>
             </div>
             <div style={{ height: 400, width: '100%' }}>
                 <DataGrid
@@ -180,7 +180,7 @@ export default function DivisionTable(props) {
                     pageSizeOptions={[5, 10]}
                 />
             </div>
-            <FormDivision open={open} handleClose={handleClose} handleSave={handleSave} editData={editData} editId={editId} setDV_Name={setDV_Name}></FormDivision>
+            <FormDivision open={open} handleClose={handleClose} handleSave={handleSave} editData={editData} editId={editId} setName={setName}></FormDivision>
         </>
     );
 }

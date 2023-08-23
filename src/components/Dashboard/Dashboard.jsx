@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable react/prop-types */
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {
     CssBaseline,
@@ -18,8 +20,8 @@ import Orders from './Orders';
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
-export default function Dashboard() {
-
+export default function Dashboard(props) {
+    const { api } = props;
     return (
         <ThemeProvider theme={defaultTheme}>
             <Box sx={{ display: 'flex' }}>
@@ -39,7 +41,7 @@ export default function Dashboard() {
                     }}
                 >
                     <Toolbar />
-                    <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+                    <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
                         <Grid container spacing={3}>
                             {/* Chart */}
                             <Grid item xs={12} md={8} lg={9}>
@@ -70,7 +72,7 @@ export default function Dashboard() {
                             {/* Recent Orders */}
                             <Grid item xs={12}>
                                 <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                                    <Orders />
+                                    <Orders api={api} />
                                 </Paper>
                             </Grid>
                         </Grid>

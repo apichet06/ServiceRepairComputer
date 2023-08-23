@@ -1,86 +1,105 @@
-import * as React from 'react';
-import Link from '@mui/material/Link';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
+/* eslint-disable react/prop-types */
+
+import { useCallback, useEffect, useState } from 'react';
 import Title from '../Header/Title';
+import { DataGrid } from '@mui/x-data-grid';
+import axios from 'axios';
+import { Button } from '@mui/material';
+import FormReview from './FormReview';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 
-// Generate Order Data
-function createData(id, date, name, shipTo, paymentMethod, amount) {
-    return { id, date, name, shipTo, paymentMethod, amount };
-}
+export default function Orders(props) {
+    const { api } = props;
+    const [rows, setRows] = useState([]);
+    const [dataIssue, setDataIssue] = useState([]);
 
-const rows = [
-    createData(
-        0,
-        '16 Mar, 2019',
-        'Elvis Presley',
-        'Tupelo, MS',
-        'VISA ⠀•••• 3719',
-        312.44,
-    ),
-    createData(
-        1,
-        '16 Mar, 2019',
-        'Paul McCartney',
-        'London, UK',
-        'VISA ⠀•••• 2574',
-        866.99,
-    ),
-    createData(2, '16 Mar, 2019', 'Tom Scholz', 'Boston, MA', 'MC ⠀•••• 1253', 100.81),
-    createData(
-        3,
-        '16 Mar, 2019',
-        'Michael Jackson',
-        'Gary, IN',
-        'AMEX ⠀•••• 2000',
-        654.39,
-    ),
-    createData(
-        4,
-        '15 Mar, 2019',
-        'Bruce Springsteen',
-        'Long Branch, NJ',
-        'VISA ⠀•••• 5919',
-        212.79,
-    ),
-];
+    const [open, setOpen] = useState(false);
 
-function preventDefault(event) {
-    event.preventDefault();
-}
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
 
-export default function Orders() {
+    const handleClose = () => {
+        setOpen(false);
+    };
+
+    const columns = [
+        { field: 'AutoId', headerName: 'ID', width: 70 },
+        { field: 'i_ID', headerName: 'หมายเลขแจ้งซ่อม', width: 130 },
+        { field: 'title', headerName: 'เรื่อง', width: 130 },
+        {
+            field: 'categoryId'
+            , headerName: 'อาการ',
+            width: 190,
+            valueGetter: (params) => {
+                return params.row.category?.name
+            }
+        },
+        {
+            field: 'computerId', headerName: 'คอมพิวเตอร์', width: 180,
+            valueGetter: (params) => {
+                return params.row.computer?.name
+            }
+        },
+        { field: 'description', headerName: 'รายละเอียด', width: 270 },
+        { field: 'status', headerName: 'status', width: 130 },
+        {
+            field: 'actions',
+            headerName: 'Review',
+            width: 150,
+            sortable: false,
+            renderCell: (params) => (
+                <>
+                    <Button onClick={() => { Review(params.row.i_ID), handleClickOpen() }} aria-label="Review">
+                        <VisibilityIcon />
+                    </Button>
+                </>
+            ),
+        },
+
+    ];
+
+    const Review = async (i_ID) => {
+        const data = await rows.find(row => row.i_ID === i_ID);
+        console.log(data);
+        setDataIssue(data);
+    }
+
+
+    const ShowData = useCallback(async () => {
+        const response = await axios.get(api + 'IssueAPI');
+        const result = response.data.result
+        if (response.status === 200) {
+            const data = result.map((item, index) => ({
+                ...item,
+                AutoId: index + 1
+            }));
+
+            setRows(data)
+        }
+
+    }, [api]);
+
+    useEffect(() => {
+        ShowData();
+    }, [ShowData]);
     return (
-        <React.Fragment>
+        <>
+            <FormReview open={open} handleClose={handleClose} dataIssue={dataIssue}></FormReview>
             <Title>Recent Orders</Title>
-            <Table size="small">
-                <TableHead>
-                    <TableRow>
-                        <TableCell>Date</TableCell>
-                        <TableCell>Name</TableCell>
-                        <TableCell>Ship To</TableCell>
-                        <TableCell>Payment Method</TableCell>
-                        <TableCell align="right">Sale Amount</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {rows.map((row) => (
-                        <TableRow key={row.id}>
-                            <TableCell>{row.date}</TableCell>
-                            <TableCell>{row.name}</TableCell>
-                            <TableCell>{row.shipTo}</TableCell>
-                            <TableCell>{row.paymentMethod}</TableCell>
-                            <TableCell align="right">{`$${row.amount}`}</TableCell>
-                        </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
-            <Link color="primary" href="#" onClick={preventDefault} sx={{ mt: 3 }}>
-                See more orders
-            </Link>
-        </React.Fragment>
+            <div style={{ height: 400, width: '100%' }}>
+                <DataGrid
+                    rows={rows}
+                    columns={columns}
+                    initialState={{
+                        pagination: {
+                            paginationModel: { page: 0, pageSize: 5 },
+                        },
+                    }}
+                    pageSizeOptions={[5, 10]}
+                />
+            </div>
+
+        </>
     );
 }
