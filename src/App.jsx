@@ -7,8 +7,10 @@ import Position from "./components/Position/Position";
 import Computer from "./components/Computer/Computer";
 import Repair from "./components/Repair/Repair";
 import Category from "./components/Categories/Categories";
+import Repairwork from "./components/Repairwork/Repairwork";
+import OwnWork from "./components/Ownwork/Repairwork";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-
+import Comment from "./components/Comment/Comment";
 function App() {
   const api = "http://localhost:8081/ServiceRepairComputer/api/";
 
@@ -23,6 +25,9 @@ function App() {
         <Route path="/Computer" element={<Computer api={api} />} />
         <Route path="/Repair" element={<Repair api={api} />} />
         <Route path="/Category" element={<Category api={api} />} />
+        <Route path="/Repairwork" element={<Repairwork api={api} />} />
+        <Route path="/OwnWork" element={<OwnWork api={api} />} />
+        <Route path="/Comment" element={<Comment api={api} />} />
       </Routes>
     </Router>
   );

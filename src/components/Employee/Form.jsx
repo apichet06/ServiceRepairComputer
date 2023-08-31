@@ -194,6 +194,7 @@ export default function Form(props) {
                                     label="Status"
                                     onChange={(e) => setStatus(e.target.value)}
                                 >
+                                    <MenuItem value="Admin">Admin</MenuItem>
                                     <MenuItem value="พนักงาน">พนักงาน</MenuItem>
                                     <MenuItem value="พ้นสภาพ">พ้นสภาพ</MenuItem>
                                 </Select>

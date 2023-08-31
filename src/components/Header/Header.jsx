@@ -16,7 +16,7 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-import { mainListItems, secondaryListItems } from "./listItems";
+import { mainListItems } from "./listItems";
 import { AccountCircle } from "@mui/icons-material";
 
 const drawerWidth = 240;
@@ -123,7 +123,7 @@ export default function Header() {
                         noWrap
                         sx={{ flexGrow: 1 }}
                     >
-                        ระบบแจ้งซ่อมคอมพิวเตอร์
+                        ระบบแจ้งซ่อมอุปกรณ์คอมพิวเตอร์
                     </Typography>
                     <IconButton color="inherit">
                         <Badge badgeContent={4} color="secondary">
@@ -181,7 +181,7 @@ export default function Header() {
                 <List component="nav">
                     {mainListItems}
                     <Divider sx={{ my: 1 }} />
-                    {secondaryListItems}
+                    {/* {secondaryListItems}   */}
                 </List>
             </Drawer>
         </>

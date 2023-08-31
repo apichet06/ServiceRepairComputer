@@ -1,25 +1,36 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Rating, Step, StepLabel, Stepper, Typography } from "@mui/material";
+import { ExitToApp } from "@mui/icons-material";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Rating, Step, StepLabel, Stepper, TextField, Typography } from "@mui/material";
 import axios from "axios";
 import { DateTime } from 'luxon';
 import { useCallback, useEffect } from "react";
 import { useState } from "react";
+import Swal from "sweetalert2";
 
-export default function FormReview(props) {
-    const { dataIssue, handleClose, open, api } = props;
+export default function RepairForm(props) {
+    const { dataIssue, handleClose, open, api, ShowData } = props;
+    const currentUtcTime = DateTime.utc(); // เวลา UTC ปัจจุบัน
+    const thaiTime = currentUtcTime.setZone('Asia/Bangkok');
+    const [value, setValue] = useState(0);
+    const userData = JSON.parse(localStorage.getItem("userData"));
+
     const [enumName, setEnumName] = useState([]);
     const [enumValue, setEnumValue] = useState([]);
-    const [value, setValue] = useState(0);
-
+    const [comment, setComment] = useState('');
     const [commentText, setCommentText] = useState([]);
     // หา Index ปัจจุบันของ Status ที่กำลังแสดงอยู่
     const currentIndex = enumName.indexOf(dataIssue?.status_Name);
 
-    // หา Index ของ Status ถัดไป 
+    // หา Index ของ Status ถัดไป
+
     const nextIndex = (currentIndex + 1) % enumName.length;
 
-    // นำ Index ของ Status ถัดไปมาใช้ในการค้นหาชื่อ Status และ Values 
+
+
+
+    // นำ Index ของ Status ถัดไปมาใช้ในการค้นหาชื่อ Status และ Values
+    const nextStatusName = nextIndex === 0 ? 'ส่งงาน' : enumName[nextIndex];
     const nextStatusValue = nextIndex === 0 ? 6 : enumValue[nextIndex];
 
     const fetchEnum = useCallback(async () => {
@@ -34,6 +45,42 @@ export default function FormReview(props) {
         }
     }, [api]);
 
+    const handleupdateStatus = async (id) => {
+
+        try {
+
+            const formattedDate = thaiTime.setZone('Asia/Bangkok').toFormat('yyyy-MM-dd HH:mm:ss');
+            const statusData = {
+                1: { field: 'receiveAt', status: '1' },
+                2: { field: 'startJobAt', status: '2' },
+                3: { field: 'endJobAt', status: '3' },
+                4: { field: 'sendJobAt', status: '4' },
+            };
+
+            const formData = new FormData();
+            formData.append(statusData[nextStatusValue].field, formattedDate);
+            formData.append('status', statusData[nextStatusValue].status);
+            formData.append('technicianId', userData?.employeeId);
+            formData.append('comment', comment);
+            const response = await axios.put(api + 'IssueAPI/' + id, formData);
+
+            if (response.status == 200) {
+                Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: 'ดำเนินการ ' + nextStatusName + ' สำเร็จ!',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                ShowData();
+                handleClose();
+            }
+
+        } catch (error) {
+            console.log(error.message);
+        }
+    }
+
     const fetchComments = useCallback(async () => {
         await axios.get(api + 'CommentAPI/' + dataIssue?.i_ID)
             .then((response) => {
@@ -45,9 +92,10 @@ export default function FormReview(props) {
             })
     }, [api, dataIssue?.i_ID])
 
+
     useEffect(() => {
-        fetchEnum()
-        fetchComments()
+        fetchEnum();
+        fetchComments();
     }, [fetchEnum, fetchComments]);
 
     return (
@@ -55,13 +103,13 @@ export default function FormReview(props) {
             <Dialog open={open} onClose={handleClose} maxWidth="lg">
                 <DialogTitle> ID: {dataIssue?.i_ID}</DialogTitle>
                 <DialogContent dividers>
-                    <Grid container spacing={3}>
+                    <Grid container direction="row" spacing={{ xs: 2, md: 3 }}>
                         <Grid item xs={12}>
                             <Box sx={{ width: '100%' }}>
                                 <Stepper activeStep={nextStatusValue} alternativeLabel>
-                                    {enumName.map((label) => (
-                                        <Step key={label}>
-                                            <StepLabel>{label}</StepLabel>
+                                    {enumName.map((name, index) => (
+                                        <Step key={index}>
+                                            <StepLabel>{name}</StepLabel>
                                         </Step>
                                     ))}
                                 </Stepper>
@@ -136,6 +184,34 @@ export default function FormReview(props) {
 
                         </Grid>
                     </Grid>
+
+                    {nextStatusValue !== 5 && nextStatusValue !== 6 && (
+                        <>
+                            <hr />
+                            <Grid container direction="row" justifyContent="flex-end" alignItems="center" spacing={1}>
+
+                                {nextStatusValue === 4 && (<>
+
+                                    <Grid item xs={11}>
+                                        <TextField fullWidth
+                                            id="standard-multiline-flexible"
+                                            label="รายละเอียดการปิดงาน"
+                                            multiline
+                                            maxRows={4}
+                                            variant="standard"
+                                            error
+                                            onChange={(e) => setComment(e.target.value)}
+                                        />
+                                    </Grid>
+                                </>)}
+                                <Grid item xs={1}>
+                                    <Button variant="contained" onClick={() => { handleupdateStatus(dataIssue?.id) }}>
+                                        {nextStatusName}
+                                    </Button>
+                                </Grid>
+                            </Grid>
+                        </>
+                    )}
                     <hr />
                     <Grid container direction="row" alignItems="center" style={{ fontSize: '14px' }} spacing={1}>
                         <Grid item xs={3}>
@@ -181,6 +257,7 @@ export default function FormReview(props) {
 
                         </>
                     )}
+
 
                 </DialogContent>
                 <DialogActions>

@@ -1,18 +1,20 @@
 /* eslint-disable react/prop-types */
+/* eslint-disable no-unused-vars */
 
 import { useCallback, useEffect, useState } from 'react';
 import Title from '../Header/Title';
 import { DataGrid } from '@mui/x-data-grid';
 import axios from 'axios';
 import { Button } from '@mui/material';
-import FormReview from './FormReview';
+import RepairForm from './RepairForm';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { DateTime } from 'luxon';
-export default function Orders(props) {
+
+export default function RepairTable(props) {
     const { api } = props;
     const [rows, setRows] = useState([]);
     const [dataIssue, setDataIssue] = useState([]);
-
+    const [commentText, setCommentText] = useState([]);
     const [open, setOpen] = useState(false);
 
     const handleClickOpen = () => {
@@ -47,7 +49,7 @@ export default function Orders(props) {
             headerName: 'วันที่แจ้ง',
             width: 200,
             valueGetter: (params) => {
-                return DateTime.fromISO(params.row.createdAt).setLocale('th').toFormat('d MMMM yyyy เวลา HH:mm')
+                return DateTime.fromISO(dataIssue?.createdAt).setLocale('th').toFormat('dd/MM/yyyy HH:mm:ss')
             },
         },
         { field: 'status_Name', headerName: 'status', width: 100 },
@@ -67,27 +69,36 @@ export default function Orders(props) {
 
     ];
 
+
+    const fetchComments = useCallback(async (i_ID) => {
+        try {
+            const response = await axios.get(api + 'CommentAPI/' + i_ID);
+            console.log(response.data.result);
+            setCommentText(response.data.result);
+        } catch (error) {
+            console.log(error.message);
+        }
+    }, [api]);
+
+
     const Review = async (i_ID) => {
         const data = await rows.find(row => row.i_ID === i_ID);
-        // console.log(data);
         setDataIssue(data);
     }
 
-
+    // ในส่วนของ ShowData
     const ShowData = useCallback(async () => {
         const response = await axios.get(api + 'IssueAPI');
         const result = response.data.result
         if (response.status === 200) {
-            // เรียงลำดับข้อมูลตาม i_ID DESC
-            result.sort((a, b) => a.status.localeCompare(b.status));
-            const data = result.map((item, index) => ({
+            const filteredData = result.filter(item => item.technicianId === null);
+            const data = filteredData.map((item, index) => ({
                 ...item,
                 AutoId: index + 1
             }));
 
-            setRows(data)
+            setRows(data);
         }
-
     }, [api]);
 
     useEffect(() => {
@@ -95,7 +106,7 @@ export default function Orders(props) {
     }, [ShowData]);
     return (
         <>
-            <FormReview open={open} handleClose={handleClose} dataIssue={dataIssue} api={api}></FormReview>
+            <RepairForm open={open} handleClose={handleClose} dataIssue={dataIssue} api={api} ShowData={ShowData} ></RepairForm>
             <Title>รายการแจ้งซ่อม</Title>
             <div style={{ height: 400, width: '100%' }}>
                 <DataGrid
@@ -109,7 +120,5 @@ export default function Orders(props) {
                     pageSizeOptions={[5, 10]}
                 />
             </div>
-
-        </>
-    );
+        </>);
 }

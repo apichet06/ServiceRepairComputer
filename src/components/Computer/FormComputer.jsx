@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
@@ -8,11 +8,10 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import SendIcon from '@mui/icons-material/Send';
 import DialogTitle from '@mui/material/DialogTitle';
-import { FormControl, Grid, InputLabel, MenuItem, Select } from '@mui/material';
+import { Alert, FormControl, Grid, InputLabel, MenuItem, Select } from '@mui/material';
 
 export default function FormComputer(props) {
-    const { open, handleClose, handleSave, editId, editData, setName, setSerialNumber, setDescription } = props;
-
+    const { open, handleClose, handleSave, editId, editData, setName, setSerialNumber, setDescription, massageAlert, showAlert } = props;
 
     return (
         <>
@@ -26,14 +25,16 @@ export default function FormComputer(props) {
                                 <Select
                                     labelId="demo-simple-select-label"
                                     id="demo-simple-select"
-                                    name='Name'
                                     defaultValue={editData?.name ?? undefined}
-                                    label="คอมพิวเตอร์"
+                                    label="อุปกรณ์"
                                     onChange={e => setName(e.target.value)}
                                 >
                                     <MenuItem value="คอมพิวเตอร์ตั้งโต๊ะ(PC)">คอมพิวเตอร์ตั้งโต๊ะ(PC)</MenuItem>
-                                    <MenuItem value="จอคอมพิวเตอร์">จอคอมพิวเตอร์</MenuItem>
-                                    <MenuItem value="Notebook">Notebook</MenuItem>
+                                    <MenuItem value="จอ(Monitor)">จอ(Monitor)</MenuItem>
+                                    <MenuItem value="โน๊ตบุ๊ค(Notebook)">โน๊ตบุ๊ค(Notebook)</MenuItem>
+                                    <MenuItem value="มือถือ(Mobile)">มือถือ(Mobile)</MenuItem>
+                                    <MenuItem value="แท็บเล็ต(Tablet)">แท็บเล็ต(Tablet)</MenuItem>
+
                                 </Select>
                             </FormControl>
                         </Grid>
@@ -62,6 +63,11 @@ export default function FormComputer(props) {
                             />
                         </Grid>
                     </Grid>
+                    {showAlert && (
+                        <Alert variant="filled" severity="warning">
+                            {massageAlert}
+                        </Alert>
+                    )}
                 </DialogContent>
                 <DialogActions>
                     <Button variant="contained" color="success" endIcon={<SendIcon />} onClick={handleSave}>{editId ? "อับเดท" : "บันทึก"}</Button>

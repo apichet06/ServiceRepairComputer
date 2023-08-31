@@ -11,16 +11,10 @@ import {
 } from '@mui/material';
 
 import Header from '../Header/Header';
-
-import Chart from './Chart';
-import ChartComplete from './ChartComplete';
-import Orders from './Orders';
-
-
+import CommentTable from './CommentTable';
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
-
-export default function Dashboard(props) {
+export default function Comment(props) {
     const { api } = props;
     return (
         <ThemeProvider theme={defaultTheme}>
@@ -43,37 +37,10 @@ export default function Dashboard(props) {
                     <Toolbar />
                     <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
                         <Grid container spacing={3}>
-                            {/* Chart */}
-                            <Grid item xs={12} md={8} lg={9}>
-
-                                <Paper
-                                    sx={{
-                                        p: 2,
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        height: 240,
-                                    }}
-                                >
-                                    <Chart api={api} />
-                                </Paper>
-                            </Grid>
-                            {/* Recent Deposits */}
-                            <Grid item xs={12} md={4} lg={3}>
-                                <Paper
-                                    sx={{
-                                        p: 2,
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        height: 240,
-                                    }}
-                                >
-                                    <ChartComplete api={api} />
-                                </Paper>
-                            </Grid>
                             {/* Recent Orders */}
                             <Grid item xs={12}>
                                 <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                                    <Orders api={api} />
+                                    <CommentTable api={api} />
                                 </Paper>
                             </Grid>
                         </Grid>

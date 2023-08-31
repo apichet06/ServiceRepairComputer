@@ -1,10 +1,13 @@
 /* eslint-disable react/prop-types */
-import { Button, DialogActions, DialogContent, FormControl, Grid, InputLabel, MenuItem, Select, TextField } from "@mui/material";
+import { Button, DialogActions, DialogContent, FormControl, Grid, InputLabel, MenuItem, Select, Stack, TextField } from "@mui/material";
 import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
-import SendIcon from '@mui/icons-material/Send';
+import { Send as SendIcon, CloudUpload as CloudUpload } from '@mui/icons-material';
 import Swal from "sweetalert2";
 import Titles from "../Header/Title";
+import { DateTime } from 'luxon';
+
+
 export default function RepairForm(props) {
     const { api } = props;
     const [categories, setCategories] = useState([]);
@@ -14,7 +17,29 @@ export default function RepairForm(props) {
     const [computerId, setComputerId] = useState('');
     const [C_ID, setCategoryId] = useState('');
     const userData = JSON.parse(localStorage.getItem('userData'));
+    const [imageUrl, setImageUrl] = useState(null);
+    const [selectedFile, setSelectedFile] = useState(null);
 
+    const currentUtcTime = DateTime.utc(); // เวลา UTC ปัจจุบัน
+    const thaiTime = currentUtcTime.setZone('Asia/Bangkok');
+
+
+    const handleFileUpload = (event) => {
+        const file = event.target.files[0];
+
+        const reader = new FileReader();
+        if (file) {
+            reader.onloadend = () => {
+                setImageUrl(reader.result);
+            };
+            setSelectedFile(file);
+            // console.log(file);
+            reader.readAsDataURL(file);
+        } else {
+            setSelectedFile(null);
+        }
+
+    };
 
     // สร้างฟังก์ชันสำหรับรีเซ็ตค่าในฟอร์ม
     const resetForm = () => {
@@ -22,6 +47,7 @@ export default function RepairForm(props) {
         setDescription('');
         setComputerId('');
         setCategoryId('');
+        setImageUrl(null);
     };
 
     const handleSave = async () => {
@@ -31,8 +57,8 @@ export default function RepairForm(props) {
             formData.append('title', title);
             formData.append('description', description);
             formData.append('status', 0);
-            formData.append('createdAt', '2023-08-05T00:00:00');
-            // formData.append('path_Images', null);
+            formData.append('createdAt', thaiTime.setZone('Asia/Bangkok').toFormat('yyyy-MM-dd HH:mm:ss'));
+            formData.append('imageFile', selectedFile);
             formData.append('computerId', computerId);
             formData.append('C_ID', C_ID);
             if (description && computerId && C_ID) {
@@ -170,6 +196,25 @@ export default function RepairForm(props) {
                                 ))}
                             </Select>
                         </FormControl>
+                    </Grid>
+                    <Grid item xs={2} sm={2} >
+                        <Stack direction="row" alignItems="center" spacing={2} sx={{ m: 2 }}>
+                            <label htmlFor="upload-image">
+                                <Button variant="outlined" component="span" startIcon={<CloudUpload />}>
+                                    ภาพประกอบ
+                                </Button>
+                                <input
+                                    id="upload-image"
+                                    hidden
+                                    accept="image/*"
+                                    type="file"
+                                    onChange={handleFileUpload}
+                                />
+                            </label>
+                        </Stack>
+                    </Grid>
+                    <Grid item xs={4} sm={4} >
+                        {imageUrl && <img src={imageUrl} alt="Uploaded Image" height="200" />}
                     </Grid>
                 </Grid>
             </DialogContent>

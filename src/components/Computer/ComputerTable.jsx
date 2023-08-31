@@ -11,12 +11,14 @@ import FormComputer from './FormComputer';
 export default function ComputerTable(props) {
     const { api } = props;
     const [rows, setRows] = useState([]);
-    const [open, setOpen] = useState('');
+    const [open, setOpen] = useState(false);
     const [editId, setEditId] = useState('');
     const [editData, setEditData] = useState('');
     const [name, setName] = useState('');
     const [serialNumber, setSerialNumber] = useState('');
     const [description, setDescription] = useState('');
+    const [massageAlert, setMassageAlert] = useState();
+    const [showAlert, setShowAlert] = useState(false);
 
 
 
@@ -51,7 +53,19 @@ export default function ComputerTable(props) {
 
     useEffect(() => {
         showComputer();
-    }, [showComputer]);
+
+        let timer;
+
+        if (showAlert) {
+            timer = setTimeout(() => {
+                setShowAlert(false);
+            }, 30000); // 1 minute in milliseconds
+        }
+
+        return () => {
+            clearTimeout(timer);
+        };
+    }, [showComputer, showAlert]);
 
     const columns = [
         { field: 'runAutoId', headerName: 'ID', width: 70 },
@@ -79,10 +93,11 @@ export default function ComputerTable(props) {
 
     const handleEdit = (id) => {
         const computer = rows.find(row => row.id === id);
+
         setEditData(computer)
         setName(computer?.name)
         setSerialNumber(computer?.serialNumber)
-        setDescription(computer?.discription)
+        setDescription(computer?.description)
         setEditId(id)
     }
     const handleDelete = async (id) => {
@@ -124,6 +139,7 @@ export default function ComputerTable(props) {
             }
 
             if (editId) {
+                console.log(name, serialNumber, description)
                 if (name && serialNumber && description) {
                     const response = await axios.put(api + 'ComputerAPI/' + editId, data);
                     if (response.status === 200) {
@@ -137,6 +153,9 @@ export default function ComputerTable(props) {
                         });
                         showComputer();
                     }
+                } else {
+                    setMassageAlert("กรุณากรอกข้อมูลไห้ครบ!")
+                    setShowAlert(true);
                 }
             } else {
 
@@ -155,6 +174,9 @@ export default function ComputerTable(props) {
                         showComputer();
                     }
 
+                } else {
+                    setMassageAlert("กรุณากรอกข้อมูลไห้ครบ!")
+                    setShowAlert(true);
                 }
             }
 
@@ -191,7 +213,7 @@ export default function ComputerTable(props) {
                 />
             </div>
             <FormComputer open={open} handleClose={handleClose} editId={editId} handleSave={handleSave} editData={editData} setName={setName}
-                setSerialNumber={setSerialNumber} setDescription={setDescription} />
+                setSerialNumber={setSerialNumber} setDescription={setDescription} massageAlert={massageAlert} showAlert={showAlert} />
         </>
     );
 }

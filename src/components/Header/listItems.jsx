@@ -12,13 +12,13 @@ import {
     People as PeopleIcon,
     Category as CategoryIcon,
     Layers as LayersIcon,
-    Assignment as AssignmentIcon,
     Diversity2 as Diversity2Icon,
     ListAlt as ListAltIcon,
-    ImportantDevices as ImportantDevices
+    ImportantDevices as ImportantDevices,
+    Construction as ConstructionIcon,
+    PrecisionManufacturing as PrecisionManufacturingIcon,
+    Comment as CommentIcon
 } from '@mui/icons-material';
-
-
 
 import { Link } from 'react-router-dom';
 
@@ -30,15 +30,41 @@ export const mainListItems = (
             </ListItemIcon>
             <ListItemText primary="Dashboard" />
         </ListItemButton>
+        <Divider />
+        <ListSubheader component="div" inset>
+            ผู้แจ้ง
+        </ListSubheader>
         <ListItemButton component={Link} to="/Repair">
             <ListItemIcon>
                 <LayersIcon />
             </ListItemIcon>
             <ListItemText primary="แจ้งซ่อม" />
         </ListItemButton>
-        <Divider sx={{ my: 1 }} />
+        <ListItemButton component={Link} to="/Comment">
+            <ListItemIcon>
+                <CommentIcon />
+            </ListItemIcon>
+            <ListItemText primary="ประเมินงานซ่อม" />
+        </ListItemButton>
+        <Divider />
         <ListSubheader component="div" inset>
-            ส่วนของผู้ดูแลระบบ
+            งานซ่อม
+        </ListSubheader>
+        <ListItemButton component={Link} to="/Repairwork">
+            <ListItemIcon>
+                <ConstructionIcon />
+            </ListItemIcon>
+            <ListItemText primary="รับงานซ่อม" />
+        </ListItemButton>
+        <ListItemButton component={Link} to="/OwnWork">
+            <ListItemIcon>
+                <PrecisionManufacturingIcon />
+            </ListItemIcon>
+            <ListItemText primary="งานที่รับ" />
+        </ListItemButton>
+        <Divider />
+        <ListSubheader component="div" inset>
+            ผู้ดูแลระบบ
         </ListSubheader>
         <ListItemButton component={Link} to="/Division">
             <ListItemIcon>
@@ -73,16 +99,3 @@ export const mainListItems = (
     </>
 );
 
-export const secondaryListItems = (
-    <>
-        <ListSubheader component="div" inset>
-            Saved reports
-        </ListSubheader>
-        <ListItemButton>
-            <ListItemIcon>
-                <AssignmentIcon />
-            </ListItemIcon>
-            <ListItemText primary="Current month" />
-        </ListItemButton>
-    </>
-);

@@ -1,68 +1,59 @@
-import * as React from 'react';
-import { useTheme } from '@mui/material/styles';
-import { XAxis, YAxis, Label, ResponsiveContainer, BarChart, Bar } from 'recharts';
+/* eslint-disable no-unused-vars */
+/* eslint-disable react/prop-types */
+
+import { useState } from 'react';
 import Title from '../Header/Title';
+import { BarChart } from '@mui/x-charts/BarChart';
+import { useCallback } from 'react';
+import axios from 'axios';
+import { useEffect } from 'react';
 
-// Generate Sales Data
-function createData(time, amount) {
-    return { time, amount };
-}
+export default function Chart(props) {
+    const { api } = props;
+    const [data, setData] = useState([]);
 
-const data = [
-    createData('00:00', 0),
-    createData('03:00', 300),
-    createData('06:00', 600),
-    createData('09:00', 800),
-    createData('12:00', 1500),
-    createData('15:00', 2000),
-    createData('18:00', 2400),
-    createData('21:00', 2400),
-    createData('24:00', undefined),
-];
+    const chartData = useCallback(async () => {
+        await axios.get(api + 'IssueAPI/chart')
+            .then((response) => {
+                setData(response.data.result);
+            }).catch((error) => {
+                console.log(error);
+            });
+    }, [api]);
 
-export default function Chart() {
-    const theme = useTheme();
+    useEffect(() => {
+        chartData();
+    }, [chartData]);
 
+    // console.log(data.map(item => item.status));
     return (
-        <React.Fragment>
-            <Title>Today</Title>
-            <ResponsiveContainer>
-                <BarChart // เปลี่ยนเป็น BarChart
-                    data={data}
-                    margin={{
-                        top: 16,
-                        right: 16,
-                        bottom: 0,
-                        left: 24,
-                    }}
-                >
-                    <XAxis
-                        dataKey="time"
-                        stroke={theme.palette.text.secondary}
-                        style={theme.typography.body2}
+        <>
+            {data.length !== 0 && (
+                <>
+                    <Title>สถานะงาน</Title>
+                    <BarChart
+                        margin={{
+                            top: 10,
+                            right: 16,
+                            bottom: 20,
+                            left: 24,
+                        }}
+                        xAxis={[
+                            {
+                                id: 'issues',
+                                data: data.map(item => item.status_name),
+                                scaleType: 'band',
+                            },
+                        ]}
+                        series={[
+                            {
+                                data: data.map(item => item.count),
+                            },
+                        ]}
                     />
-                    <YAxis
-                        stroke={theme.palette.text.secondary}
-                        style={theme.typography.body2}
-                    >
-                        <Label
-                            angle={270}
-                            position="left"
-                            style={{
-                                textAnchor: 'middle',
-                                fill: theme.palette.text.primary,
-                                ...theme.typography.body1,
-                            }}
-                        >
-                            Sales ($)
-                        </Label>
-                    </YAxis>
-                    <Bar // เปลี่ยนเป็น Bar
-                        dataKey="amount"
-                        fill={theme.palette.primary.main}
-                    />
-                </BarChart>
-            </ResponsiveContainer>
-        </React.Fragment>
+                </>
+            )}
+        </>
+
     );
 }
