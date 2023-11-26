@@ -13,7 +13,7 @@ import {
     Alert,
 } from "@mui/material";
 import axios from "axios"; // Make sure to import Axios
-
+import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 
 // TODO remove, this demo shouldn't need to reset the theme.
@@ -21,7 +21,7 @@ const defaultTheme = createTheme();
 
 export default function SignInSide(props) {
     const { api } = props;
-
+    const navigate = useNavigate();
     const [showAlert, setShowAlert] = useState(false);
     const [massageAlert, setMassageAlert] = useState();
     const [usernameError, setUsernameError] = useState(false);
@@ -76,8 +76,8 @@ export default function SignInSide(props) {
             localStorage.setItem("token", token);
             localStorage.setItem("userData", JSON.stringify(userData));
             setShowAlert(false);
+            navigate("/Dashboard")
 
-            window.location = "/Dashboard";
         } catch (error) {
             setShowAlert(true);
             setMassageAlert(error.response.data.message);

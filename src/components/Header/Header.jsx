@@ -18,6 +18,7 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import { mainListItems } from "./listItems";
 import { AccountCircle } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -73,13 +74,14 @@ export default function Header() {
         setOpen(!open);
     };
 
-
+    const navigate = useNavigate();
 
     const userData = JSON.parse(localStorage.getItem("userData"));
     const [anchorEl, setAnchorEl] = React.useState(null);
     const { title, firstName, lastName } = userData;
     if (!userData) {
-        window.location = "/";
+
+        navigate("/")
     }
 
     const handleMenu = (event) => {
@@ -93,7 +95,7 @@ export default function Header() {
     const Logout = () => {
         localStorage.removeItem("token");
         localStorage.removeItem("userData");
-        window.location = "/";
+        navigate("/")
     };
 
     return (
