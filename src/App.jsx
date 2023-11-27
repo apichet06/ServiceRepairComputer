@@ -12,8 +12,8 @@ import OwnWork from "./components/Ownwork/Repairwork";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Comment from "./components/Comment/Comment";
 function App() {
-  const api = "http://localhost:8081/ServiceRepairComputer/api/";
-
+  // const api = "http://localhost:8081/ServiceRepairComputer/api/";
+  const api = "https://servicerepairapi.azurewebsites.net/api/";
   return (
     <Router>
       <Routes>
