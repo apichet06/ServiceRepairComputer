@@ -19,7 +19,7 @@ const defaultTheme = createTheme();
 
 export default function Categories(props) {
     const { api } = props;
-    console.log(api);
+    // console.log(api);
     return (
         <ThemeProvider theme={defaultTheme}>
             <Box sx={{ display: 'flex' }}>

@@ -19,7 +19,7 @@ export default function ChartComplete(props) {
         await axios.get(api + 'IssueAPI/ChartComplete')
             .then((response) => {
                 setDataComplete(response.data.result);
-                console.log(response.data.result);
+                // console.log(response.data.result);
             }).catch((error) => {
                 console.log(error);
             });
