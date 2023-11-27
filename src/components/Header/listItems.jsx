@@ -21,7 +21,8 @@ import {
 } from '@mui/icons-material';
 
 import { Link } from 'react-router-dom';
-
+const userData = JSON.parse(localStorage.getItem("userData"));
+const { status } = userData;
 export const mainListItems = (
     <>
         <ListItemButton component={Link} to="/Dashboard">
@@ -47,55 +48,61 @@ export const mainListItems = (
             <ListItemText primary="ประเมินงานซ่อม" />
         </ListItemButton>
         <Divider />
-        <ListSubheader component="div" inset>
-            งานซ่อม
-        </ListSubheader>
-        <ListItemButton component={Link} to="/Repairwork">
-            <ListItemIcon>
-                <ConstructionIcon />
-            </ListItemIcon>
-            <ListItemText primary="รับงานซ่อม" />
-        </ListItemButton>
-        <ListItemButton component={Link} to="/OwnWork">
-            <ListItemIcon>
-                <PrecisionManufacturingIcon />
-            </ListItemIcon>
-            <ListItemText primary="งานที่รับ" />
-        </ListItemButton>
-        <Divider />
-        <ListSubheader component="div" inset>
-            ผู้ดูแลระบบ
-        </ListSubheader>
-        <ListItemButton component={Link} to="/Division">
-            <ListItemIcon>
-                <Diversity2Icon />
-            </ListItemIcon>
-            <ListItemText primary="แผนก" />
-        </ListItemButton>
-        <ListItemButton component={Link} to="/Position">
-            <ListItemIcon>
-                <ListAltIcon />
-            </ListItemIcon>
-            <ListItemText primary="ตำแหน่ง" />
-        </ListItemButton>
-        <ListItemButton component={Link} to="/Employee" >
-            <ListItemIcon>
-                <PeopleIcon />
-            </ListItemIcon>
-            <ListItemText primary="ผู้ใช้ระบบ" />
-        </ListItemButton>
-        <ListItemButton component={Link} to="/Computer" >
-            <ListItemIcon>
-                <ImportantDevices />
-            </ListItemIcon>
-            <ListItemText primary="คอมพิวเตอร์" />
-        </ListItemButton>
-        <ListItemButton component={Link} to="/Category" >
-            <ListItemIcon>
-                <CategoryIcon />
-            </ListItemIcon>
-            <ListItemText primary="หัวข้อปัญหา" />
-        </ListItemButton>
+        {status == "Admin" || status == "พนักงานซ่อม" ?
+            <>
+                <ListSubheader component="div" inset>
+                    งานซ่อม
+                </ListSubheader>
+                <ListItemButton component={Link} to="/Repairwork">
+                    <ListItemIcon>
+                        <ConstructionIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="รับงานซ่อม" />
+                </ListItemButton>
+                <ListItemButton component={Link} to="/OwnWork">
+                    <ListItemIcon>
+                        <PrecisionManufacturingIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="งานที่รับ" />
+                </ListItemButton>
+                <Divider />
+            </> : ""}
+        {status == "Admin" ?
+            <>
+                <ListSubheader component="div" inset>
+                    ผู้ดูแลระบบ
+                </ListSubheader>
+                <ListItemButton component={Link} to="/Division">
+                    <ListItemIcon>
+                        <Diversity2Icon />
+                    </ListItemIcon>
+                    <ListItemText primary="แผนก" />
+                </ListItemButton>
+                <ListItemButton component={Link} to="/Position">
+                    <ListItemIcon>
+                        <ListAltIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="ตำแหน่ง" />
+                </ListItemButton>
+                <ListItemButton component={Link} to="/Employee" >
+                    <ListItemIcon>
+                        <PeopleIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="ผู้ใช้ระบบ" />
+                </ListItemButton>
+                <ListItemButton component={Link} to="/Computer" >
+                    <ListItemIcon>
+                        <ImportantDevices />
+                    </ListItemIcon>
+                    <ListItemText primary="คอมพิวเตอร์" />
+                </ListItemButton>
+                <ListItemButton component={Link} to="/Category" >
+                    <ListItemIcon>
+                        <CategoryIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="หัวข้อปัญหา" />
+                </ListItemButton>
+            </> : ""}
     </>
 );
 

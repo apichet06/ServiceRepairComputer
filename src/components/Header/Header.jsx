@@ -8,14 +8,14 @@ import {
     Typography,
     Divider,
     IconButton,
-    Badge,
+    // Badge,
     Menu,
     MenuItem,
 } from "@mui/material";
 
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import NotificationsIcon from "@mui/icons-material/Notifications";
+// import NotificationsIcon from "@mui/icons-material/Notifications";
 import { mainListItems } from "./listItems";
 import { AccountCircle } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
@@ -78,9 +78,8 @@ export default function Header() {
 
     const userData = JSON.parse(localStorage.getItem("userData"));
     const [anchorEl, setAnchorEl] = React.useState(null);
-    const { title, firstName, lastName } = userData;
+    const { title, firstName, lastName, status } = userData;
     if (!userData) {
-
         navigate("/")
     }
 
@@ -128,9 +127,7 @@ export default function Header() {
                         ระบบแจ้งซ่อมอุปกรณ์คอมพิวเตอร์
                     </Typography>
                     <IconButton color="inherit">
-                        <Badge badgeContent={4} color="secondary">
-                            <NotificationsIcon />
-                        </Badge>
+                        {status}
                     </IconButton>
 
                     <div>

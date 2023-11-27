@@ -11,8 +11,6 @@ import { useEffect } from 'react';
 export default function ChartComplete(props) {
     const { api } = props;
 
-
-
     const [dataComplete, setDataComplete] = useState([]);
 
     const chartData = useCallback(async () => {

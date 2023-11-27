@@ -196,6 +196,7 @@ export default function Form(props) {
                                 >
                                     <MenuItem value="Admin">Admin</MenuItem>
                                     <MenuItem value="พนักงาน">พนักงาน</MenuItem>
+                                    <MenuItem value="พนักงานซ่อม">พนักงานซ่อม</MenuItem>
                                     <MenuItem value="พ้นสภาพ">พ้นสภาพ</MenuItem>
                                 </Select>
                             </FormControl>
