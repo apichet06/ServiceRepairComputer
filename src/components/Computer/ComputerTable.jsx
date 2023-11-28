@@ -221,7 +221,7 @@ export default function ComputerTable(props) {
 
 
 
-    const resSetData = () => {
+    const reSetData = () => {
         handleEdit(null)
         setSelectedFile(null)
         setImageUrl(null)
@@ -232,7 +232,7 @@ export default function ComputerTable(props) {
         <>
             <div style={{ height: 400, width: '100%' }}>
                 <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '10px' }}>
-                    <Button variant="contained" onClick={() => { handleClickOpen(); resSetData(); }}>
+                    <Button variant="contained" onClick={() => { handleClickOpen(); reSetData(); }}>
                         เพิ่มข้อมูล
                     </Button>
                 </div>

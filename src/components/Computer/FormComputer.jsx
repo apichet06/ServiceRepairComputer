@@ -80,7 +80,8 @@ export default function FormComputer(props) {
                             </Stack>
                         </Grid>
                         <Grid item xs={4} sm={4} >
-                            {imageUrl && <img src={imageUrl} alt="Uploaded Image" height="200" />}
+
+                            {editData?.com_image != "null" ? imageUrl && <img src={imageUrl} alt="Uploaded Image" height="200" /> : null}
                         </Grid>
 
 

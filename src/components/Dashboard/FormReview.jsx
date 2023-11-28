@@ -165,7 +165,6 @@ export default function FormReview(props) {
                         <Grid item xs={6}>
                             <Box sx={{ color: 'secondary.main' }}>รูปภาพที่ผู้ใช้แจ้งซ่อม</Box>
                             <Typography gutterBottom>
-
                                 {dataIssue?.path_Images ? (
                                     <img src={api + 'IssueAPI/' + dataIssue?.path_Images} width="40%" alt={`Issue Image for ${dataIssue?.i_ID}`} />
                                 ) : <img src="./image/noimage.jpg" width="40%" />}
