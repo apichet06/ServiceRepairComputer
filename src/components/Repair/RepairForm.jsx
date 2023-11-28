@@ -48,6 +48,7 @@ export default function RepairForm(props) {
         setComputerId('');
         setCategoryId('');
         setImageUrl(null);
+
     };
 
     const handleSave = async () => {

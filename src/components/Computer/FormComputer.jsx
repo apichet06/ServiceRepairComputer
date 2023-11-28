@@ -8,10 +8,11 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import SendIcon from '@mui/icons-material/Send';
 import DialogTitle from '@mui/material/DialogTitle';
-import { Alert, FormControl, Grid, InputLabel, MenuItem, Select } from '@mui/material';
+import { Alert, FormControl, Grid, InputLabel, MenuItem, Select, Stack } from '@mui/material';
+import { CloudUpload } from '@mui/icons-material';
 
 export default function FormComputer(props) {
-    const { open, handleClose, handleSave, editId, editData, setName, setSerialNumber, setDescription, massageAlert, showAlert } = props;
+    const { open, handleClose, handleSave, editId, editData, setName, setSerialNumber, setDescription, massageAlert, showAlert, imageUrl, handleFileUpload } = props;
 
     return (
         <>
@@ -62,6 +63,28 @@ export default function FormComputer(props) {
                                 onChange={(e) => setDescription(e.target.value)}
                             />
                         </Grid>
+                        <Grid item xs={3} sm={4}>
+                            <Stack direction="row" alignItems="center" spacing={2} sx={{ m: 2 }}>
+                                <label htmlFor="upload-image">
+                                    <Button variant="outlined" component="span" startIcon={<CloudUpload />}>
+                                        ภาพประกอบ
+                                    </Button>
+                                    <input
+                                        id="upload-image"
+                                        hidden
+                                        accept="image/*"
+                                        type="file"
+                                        onChange={handleFileUpload}
+                                    />
+                                </label>
+                            </Stack>
+                        </Grid>
+                        <Grid item xs={4} sm={4} >
+                            {imageUrl && <img src={imageUrl} alt="Uploaded Image" height="200" />}
+                        </Grid>
+
+
+
                     </Grid>
                     {showAlert && (
                         <Alert variant="filled" severity="warning">

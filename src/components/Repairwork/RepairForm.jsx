@@ -229,15 +229,25 @@ export default function RepairForm(props) {
                     </Grid>
                     <hr />
                     <Grid container direction="row" justifyContent="center" alignItems="center" spacing={1}>
+
                         <Grid item xs={6}>
+                            <Box sx={{ color: 'success.main' }}>รูปภาพทรัพย์สิน</Box>
                             <Typography gutterBottom>
-                                {dataIssue?.path_Images && (
-                                    <img src={api + 'IssueAPI/' + dataIssue?.path_Images} width="100%" alt={`Issue Image for ${dataIssue?.i_ID}`} />
-                                )}
+                                {dataIssue?.computer?.com_image ? (
+                                    <img src={api + 'IssueAPI/' + dataIssue?.computer.com_image} width="40%" alt={`Issue Image for ${dataIssue?.i_ID}`} />
+                                ) : <img src="./image/noimage.jpg" width="40%" />}
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <Box sx={{ color: 'secondary.main' }}>รูปภาพที่ผู้ใช้แจ้งซ่อม</Box>
+                            <Typography gutterBottom>
+
+                                {dataIssue?.path_Images ? (
+                                    <img src={api + 'IssueAPI/' + dataIssue?.path_Images} width="40%" alt={`Issue Image for ${dataIssue?.i_ID}`} />
+                                ) : <img src="./image/noimage.jpg" width="40%" />}
                             </Typography>
                         </Grid>
                     </Grid>
-
                     {nextStatusValue === 6 && (
                         <>
                             <hr />

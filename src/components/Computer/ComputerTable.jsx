@@ -20,7 +20,8 @@ export default function ComputerTable(props) {
     const [massageAlert, setMassageAlert] = useState();
     const [showAlert, setShowAlert] = useState(false);
 
-
+    const [imageUrl, setImageUrl] = useState(null);
+    const [selectedFile, setSelectedFile] = useState(null);
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -74,6 +75,20 @@ export default function ComputerTable(props) {
         { field: 'serialNumber', headerName: 'serialNumber', width: 190 },
         { field: 'description', headerName: 'รายละเอียด', width: 250 },
         {
+            field: 'com_image',
+            headerName: 'รูป',
+            width: 250,
+            renderCell: (params) => (
+                (params.value) != "null" ? (
+                    <img src={api + 'IssueAPI/' + params.value} alt={params.value} style={{ height: '90%' }} />
+                ) : (
+                    <img src='./image/noimage.jpg' style={{ height: '90%' }} />
+                )
+            ),
+        },
+
+
+        {
             field: 'actions',
             headerName: 'การจัดการ',
             width: 150,
@@ -93,12 +108,12 @@ export default function ComputerTable(props) {
 
     const handleEdit = (id) => {
         const computer = rows.find(row => row.id === id);
-
         setEditData(computer)
         setName(computer?.name)
         setSerialNumber(computer?.serialNumber)
         setDescription(computer?.description)
         setEditId(id)
+        setImageUrl(api + 'issueApi/' + computer?.com_image)
     }
     const handleDelete = async (id) => {
         try {
@@ -129,72 +144,95 @@ export default function ComputerTable(props) {
         }
     }
 
+    const handleFileUpload = (event) => {
+        const file = event.target.files[0];
+
+        const reader = new FileReader();
+        if (file) {
+            reader.onloadend = () => {
+                setImageUrl(reader.result);
+            };
+            setSelectedFile(file);
+            // console.log(file);
+            reader.readAsDataURL(file);
+        } else {
+            setSelectedFile(null);
+        }
+
+    };
+
+
     const handleSave = async () => {
         try {
+            const formData = new FormData();
+            formData.append('com_image', selectedFile);
+            formData.append('name', name);
+            formData.append('serialNumber', serialNumber);
+            formData.append('description', description);
 
-            const data = {
-                name: name,
-                serialNumber: serialNumber,
-                description: description
-            }
+            const isValidInput = name && serialNumber && description;
+            const response = editId
+                ? isValidInput && await axios.put(api + 'ComputerAPI/' + editId, formData)
+                : isValidInput && await axios.post(api + 'ComputerAPI', formData);
 
-            if (editId) {
-                console.log(name, serialNumber, description)
-                if (name && serialNumber && description) {
-                    const response = await axios.put(api + 'ComputerAPI/' + editId, data);
-                    if (response.status === 200) {
-                        handleClose(); // ปิด Dialog 
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'success',
-                            title: response.data.message,
-                            showConfirmButton: false,
-                            timer: 1500
-                        });
-                        showComputer();
-                    }
-                } else {
-                    setMassageAlert("กรุณากรอกข้อมูลไห้ครบ!")
-                    setShowAlert(true);
-                }
-            } else {
-
-                if (name && serialNumber && description) {
-
-                    const response = await axios.post(api + 'ComputerAPI', data);
-                    if (response.status === 200) {
-                        handleClose(); // ปิด Dialog 
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'success',
-                            title: response.data.message,
-                            showConfirmButton: false,
-                            timer: 1500
-                        });
-                        showComputer();
-                    }
-
-                } else {
-                    setMassageAlert("กรุณากรอกข้อมูลไห้ครบ!")
-                    setShowAlert(true);
-                }
-            }
+            response ? handleResponse(response) : handleInvalidInput();
 
         } catch (error) {
-            handleClose(); // ปิด Dialog 
-            Swal.fire({
-                icon: 'error',
-                title: 'เกิดข้อผิดพลาด',
-                text: 'เกิดข้อผิดพลาดในการดึงข้อมูลคอมพิวเตอร์',
-            });
+            handleError();
         }
+    };
+
+    const handleResponse = (response) => {
+        if (response.status === 200) {
+            handleClose();
+            showSuccessAlert(response.data.message);
+            showComputer();
+        }
+    };
+
+    const handleInvalidInput = () => {
+        setMassageAlert("กรุณากรอกข้อมูลไห้ครบ!");
+        setShowAlert(true);
+    };
+
+    const handleError = () => {
+        handleClose();
+        showGenericErrorAlert();
+    };
+
+    const showSuccessAlert = (message) => {
+        Swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: message,
+            showConfirmButton: false,
+            timer: 1500
+        });
+    };
+
+    const showGenericErrorAlert = () => {
+        Swal.fire({
+            icon: 'error',
+            title: 'เกิดข้อผิดพลาด',
+            text: 'เกิดข้อผิดพลาดในการดึงข้อมูลคอมพิวเตอร์',
+        });
+    };
+
+
+
+
+    const resSetData = () => {
+        handleEdit(null)
+        setSelectedFile(null)
+        setImageUrl(null)
     }
+
 
     return (
         <>
             <div style={{ height: 400, width: '100%' }}>
                 <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '10px' }}>
-                    <Button variant="contained" onClick={() => { handleClickOpen(); handleEdit(null); }}>
+                    <Button variant="contained" onClick={() => { handleClickOpen(); resSetData(); }}>
                         เพิ่มข้อมูล
                     </Button>
                 </div>
@@ -212,8 +250,9 @@ export default function ComputerTable(props) {
                     pageSizeOptions={[5, 10]}
                 />
             </div>
-            <FormComputer open={open} handleClose={handleClose} editId={editId} handleSave={handleSave} editData={editData} setName={setName}
-                setSerialNumber={setSerialNumber} setDescription={setDescription} massageAlert={massageAlert} showAlert={showAlert} />
+            <FormComputer open={open} handleClose={handleClose} editId={editId} handleSave={handleSave}
+                editData={editData} setName={setName} setSerialNumber={setSerialNumber} setDescription={setDescription}
+                massageAlert={massageAlert} showAlert={showAlert} imageUrl={imageUrl} handleFileUpload={handleFileUpload} />
         </>
     );
 }

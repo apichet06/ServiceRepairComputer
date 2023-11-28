@@ -26,7 +26,7 @@ export default function ChartComplete(props) {
     useEffect(() => {
         chartData();
     }, [chartData]);
-    const completeCount = dataComplete.length > 0 ? dataComplete[0].completeSt : 0;
+    const completeCount = dataComplete.length > 0 ? dataComplete[1].completeSt : 0;
     const incompleteCount = dataComplete.length > 0 ? dataComplete[0].cntStatus : 0;
 
     const data = [

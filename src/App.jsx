@@ -1,4 +1,4 @@
-// import './App.css'
+
 import Dashboard from "./components/Dashboard/Dashboard";
 import Login from "./components/Login/Login";
 import Employees from "./components/Employee/Employee";
@@ -11,6 +11,7 @@ import Repairwork from "./components/Repairwork/Repairwork";
 import OwnWork from "./components/Ownwork/Repairwork";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Comment from "./components/Comment/Comment";
+import './App.css'
 function App() {
   // const api = "http://localhost:8081/ServiceRepairComputer/api/";
   const api = "https://servicerepairapi.azurewebsites.net/api/";
