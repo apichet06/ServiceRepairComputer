@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+
 import {
     Avatar,
     Button,
@@ -8,7 +9,7 @@ import {
     TextField,
     Box,
     Typography,
-    Alert, Container, Card, CardContent
+    Alert, Container, Card, CardContent, LinearProgress
 } from "@mui/material";
 import axios from "axios"; // Make sure to import Axios
 import { useNavigate } from "react-router-dom";
@@ -24,6 +25,7 @@ export default function SignInSide(props) {
     const [massageAlert, setMassageAlert] = useState();
     const [usernameError, setUsernameError] = useState(false);
     const [passwordError, setPasswordError] = useState(false);
+    const [loading, setloading] = useState(false);
 
     useEffect(() => {
         let timer;
@@ -41,7 +43,7 @@ export default function SignInSide(props) {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-
+        setloading(true)
         const data = new FormData(event.currentTarget);
 
         const username = data.get("Username");
@@ -50,10 +52,12 @@ export default function SignInSide(props) {
         // Validate fields
         if (!username) {
             setUsernameError(true);
+            setloading(false)
             return;
         }
         if (!password) {
             setPasswordError(true);
+            setloading(false)
             return;
         }
 
@@ -70,13 +74,16 @@ export default function SignInSide(props) {
             // Store the token in localStorage or sessionStorage
             localStorage.setItem("token", token);
             localStorage.setItem("userData", JSON.stringify(userData));
-            setShowAlert(false);
+            setShowAlert(false)
+            setloading(false)
             navigate("/Dashboard")
 
         } catch (error) {
             setShowAlert(true);
+            setloading(false)
             setMassageAlert(error.response.data.message);
         }
+
     };
 
     return (
@@ -131,9 +138,11 @@ export default function SignInSide(props) {
                                         fullWidth
                                         variant="contained"
                                         sx={{ mt: 3, mb: 2 }}
-                                    >
-                                        Sign In
+                                        disabled={loading}>
+                                        {!loading ? "Sign In" : "Loading..."}
                                     </Button>
+                                    {loading && <LinearProgress color="success" />}
+                                    {showAlert}
                                     {showAlert && (
                                         <Alert variant="filled" severity="warning">
                                             {massageAlert}
@@ -143,7 +152,6 @@ export default function SignInSide(props) {
                             </CardContent>
                         </Card>
                     </Box>
-
                 </Container>
             </ThemeProvider >
         </>

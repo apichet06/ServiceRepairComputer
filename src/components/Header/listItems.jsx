@@ -1,6 +1,4 @@
-
 import {
-
     Divider,
     ListItemButton,
     ListItemIcon,
@@ -22,7 +20,7 @@ import {
 
 import { Link } from 'react-router-dom';
 const userData = JSON.parse(localStorage.getItem("userData"));
-const { status } = userData;
+
 export const mainListItems = (
     <>
         <ListItemButton component={Link} to="/Dashboard">
@@ -48,7 +46,7 @@ export const mainListItems = (
             <ListItemText primary="ประเมินงานซ่อม" />
         </ListItemButton>
         <Divider />
-        {status == "Admin" || status == "พนักงานซ่อม" ?
+        {userData?.status == "Admin" || userData?.status == "พนักงานซ่อม" ?
             <>
                 <ListSubheader component="div" inset>
                     งานซ่อม
@@ -67,7 +65,7 @@ export const mainListItems = (
                 </ListItemButton>
                 <Divider />
             </> : ""}
-        {status == "Admin" ?
+        {userData?.status == "Admin" ?
             <>
                 <ListSubheader component="div" inset>
                     ผู้ดูแลระบบ
