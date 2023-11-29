@@ -104,7 +104,7 @@ export default function SignInSide(props) {
                         </Avatar>
 
                         <Typography component="h1" variant="h5" className="">
-                            Sign In to Computer Repair System <br /><br />
+                            Sign In Computer Repair  <br /><br />
                         </Typography>
                         <Card  >
                             <CardContent>
