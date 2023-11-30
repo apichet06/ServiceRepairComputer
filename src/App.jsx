@@ -10,6 +10,7 @@ import Category from "./components/Categories/Categories";
 import Repairwork from "./components/Repairwork/Repairwork";
 import OwnWork from "./components/Ownwork/Repairwork";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Profile from "./components/Profile/Profile";
 import Comment from "./components/Comment/Comment";
 import './App.css'
 function App() {
@@ -29,6 +30,7 @@ function App() {
         <Route path="/Repairwork" element={<Repairwork api={api} />} />
         <Route path="/OwnWork" element={<OwnWork api={api} />} />
         <Route path="/Comment" element={<Comment api={api} />} />
+        <Route path="/Profile" element={<Profile api={api} />} />
       </Routes>
     </Router>
   );

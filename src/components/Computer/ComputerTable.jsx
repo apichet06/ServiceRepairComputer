@@ -230,7 +230,7 @@ export default function ComputerTable(props) {
 
     return (
         <>
-            <div style={{ height: 400, width: '100%' }}>
+            <div style={{ width: '100%' }}>
                 <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '10px' }}>
                     <Button variant="contained" onClick={() => { handleClickOpen(); reSetData(); }}>
                         เพิ่มข้อมูล

@@ -19,7 +19,7 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { mainListItems } from "./listItems";
 import { AccountCircle } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-
+import { Link } from 'react-router-dom';
 const drawerWidth = 240;
 
 const AppBar = styled(MuiAppBar, {
@@ -157,7 +157,7 @@ export default function Header() {
                             onClose={handleClose}
                         >
                             <MenuItem>{title + "" + firstName + " " + lastName}</MenuItem>
-                            <MenuItem onClick={handleClose}>Profile</MenuItem>
+                            <MenuItem component={Link} to="/Profile">Profile</MenuItem>
                             <MenuItem onClick={Logout}>Logout</MenuItem>
                         </Menu>
                     </div>

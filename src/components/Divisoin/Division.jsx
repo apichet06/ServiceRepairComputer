@@ -41,7 +41,7 @@ export default function Division(props) {
                     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
                         <Grid container spacing={3}>
                             {/* Recent Orders */}
-                            <Grid item xs={12}>
+                            <Grid item xs={7}>
                                 <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
                                     <DivisionTable api={api} />
                                 </Paper>

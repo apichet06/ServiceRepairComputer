@@ -102,11 +102,10 @@ export default function SignInSide(props) {
                         <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
                             <LockOutlinedIcon />
                         </Avatar>
-
                         <Typography component="h1" variant="h5" className="">
                             Sign In Computer Repair  <br /><br />
                         </Typography>
-                        <Card  >
+                        <Card>
                             <CardContent>
                                 <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
                                     <TextField
@@ -128,7 +127,7 @@ export default function SignInSide(props) {
                                         label="Password*"
                                         type="password"
                                         id="password"
-                                        autoComplete="current-password"
+                                        autoComplete="off"
                                         variant="standard"
                                         error={passwordError}
                                         helperText={passwordError && "กรุณากรอก Password!"}
@@ -142,7 +141,7 @@ export default function SignInSide(props) {
                                         {!loading ? "Sign In" : "Loading..."}
                                     </Button>
                                     {loading && <LinearProgress color="success" />}
-                                    {showAlert}
+
                                     {showAlert && (
                                         <Alert variant="filled" severity="warning">
                                             {massageAlert}
@@ -155,6 +154,5 @@ export default function SignInSide(props) {
                 </Container>
             </ThemeProvider >
         </>
-
     );
 }

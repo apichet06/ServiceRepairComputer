@@ -38,14 +38,14 @@ export default function Computer(props) {
                     <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
                         <Grid container spacing={3}>
                             {/* Recent EmployeeTable */}
-                            <Grid item xs={12}>
+                            <Grid item xs={10}>
                                 <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
                                     <ComputerTeble api={api} />
                                 </Paper>
                             </Grid>
                         </Grid>
-
                     </Container>
+
                 </Box>
             </Box>
         </ThemeProvider>
