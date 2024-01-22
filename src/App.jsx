@@ -12,10 +12,10 @@ import OwnWork from "./components/Ownwork/Repairwork";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Profile from "./components/Profile/Profile";
 import Comment from "./components/Comment/Comment";
+import { api } from "./utils/api";
 import './App.css'
 function App() {
-  // const api = "http://localhost:8081/ServiceRepairComputer/api/";
-  const api = "https://servicerepairapi.azurewebsites.net/api/";
+
   return (
     <Router>
       <Routes>
