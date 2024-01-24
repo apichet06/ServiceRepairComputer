@@ -16,7 +16,7 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 // import NotificationsIcon from "@mui/icons-material/Notifications";
-import { mainListItems } from "./listItems";
+import MainListItems from "./listItems";
 import { AccountCircle } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { Link } from 'react-router-dom';
@@ -178,7 +178,7 @@ export default function Header() {
                 </Toolbar>
                 <Divider />
                 <List component="nav">
-                    {mainListItems}
+                    <MainListItems />
                     <Divider sx={{ my: 1 }} />
                     {/* {secondaryListItems}   */}
                 </List>

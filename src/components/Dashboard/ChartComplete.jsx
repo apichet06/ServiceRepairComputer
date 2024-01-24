@@ -14,24 +14,33 @@ export default function ChartComplete(props) {
     const [dataComplete, setDataComplete] = useState([]);
 
     const chartData = useCallback(async () => {
-        await axios.get(api + 'IssueAPI/ChartComplete')
-            .then((response) => {
-                setDataComplete(response.data.result);
-                // console.log(response.data.result);
-            }).catch((error) => {
-                console.log(error);
-            });
-    }, [api]);
+        try {
+            const response = await axios.get(api + 'IssueAPI/ChartComplete');
+            const resultData = response.data.result;
 
+            // รวมค่า completeSt และ cntStatus ทั้งหมด
+            const sumData = resultData.reduce((accumulator, currentValue) => {
+                return {
+                    completeSt: accumulator.completeSt + currentValue.completeSt,
+                    cntStatus: accumulator.cntStatus + currentValue.cntStatus
+                };
+            }, { completeSt: 0, cntStatus: 0 });
+
+            // นำผลรวมไปกำหนดค่าให้กับ state หรือทำอย่างอื่นต่อไปได้ตามต้องการ
+            setDataComplete(sumData);
+
+        } catch (error) {
+            console.error(error);
+        }
+    }, [api]);
+    console.log(dataComplete.cntStatus);
     useEffect(() => {
         chartData();
     }, [chartData]);
-    const completeCount = dataComplete.length > 0 ? dataComplete[1].completeSt : 0;
-    const incompleteCount = dataComplete.length > 0 ? dataComplete[0].cntStatus : 0;
 
     const data = [
-        { id: 0, value: completeCount, label: 'Complete' },
-        { id: 1, value: incompleteCount, label: 'แจ้งซ่อม' },
+        { id: 0, value: dataComplete.completeSt, label: 'Complete' },
+        { id: 1, value: dataComplete.cntStatus, label: 'แจ้งปัญหา' },
     ];
     // const palette = ['red', 'green'];
     return (
